@@ -1,0 +1,271 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.25rem;
+
+  /* ── Monochrome Sketch Palette ── */
+  --background: oklch(0.98 0 0);        /* near-white paper */
+  --foreground: oklch(0.12 0 0);        /* deep charcoal ink */
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.12 0 0);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.12 0 0);
+
+  --primary: oklch(0.12 0 0);           /* black ink */
+  --primary-foreground: oklch(0.98 0 0);
+
+  --secondary: oklch(0.92 0 0);
+  --secondary-foreground: oklch(0.20 0 0);
+
+  --muted: oklch(0.94 0 0);
+  --muted-foreground: oklch(0.50 0 0);
+
+  --accent: oklch(0.88 0 0);
+  --accent-foreground: oklch(0.12 0 0);
+
+  --destructive: oklch(0.577 0.245 27.325);
+
+  --border: oklch(0.20 0 0);            /* dark ink border */
+  --input: oklch(0.20 0 0);
+  --ring: oklch(0.30 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+}
+
+/* Flex min-size fix */
+.flex { min-width: 0; min-height: 0; }
+
+/* Container */
+.container {
+  @apply mx-auto px-4;
+  max-width: 1200px;
+}
+
+html { scroll-behavior: smooth; }
+
+/* ── Sketch / Hand-drawn utilities ─────────────────────────────────────────── */
+
+/* Rough border — slightly uneven, simulates hand-drawn box */
+.sketch-border {
+  border: 2px solid oklch(0.12 0 0);
+  border-radius: 2px 6px 3px 5px / 5px 3px 6px 2px;
+  box-shadow: 3px 3px 0 oklch(0.12 0 0);
+}
+
+.sketch-border-sm {
+  border: 1.5px solid oklch(0.12 0 0);
+  border-radius: 2px 5px 3px 4px / 4px 2px 5px 3px;
+  box-shadow: 2px 2px 0 oklch(0.12 0 0);
+}
+
+/* Sketch card hover — shifts the shadow */
+.sketch-card {
+  border: 2px solid oklch(0.12 0 0);
+  border-radius: 3px 8px 4px 6px / 6px 4px 8px 3px;
+  box-shadow: 4px 4px 0 oklch(0.12 0 0);
+  background: oklch(1 0 0);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.sketch-card:hover {
+  box-shadow: 6px 6px 0 oklch(0.12 0 0);
+  transform: translate(-1px, -1px);
+}
+
+/* Sketch button */
+.sketch-btn {
+  border: 2px solid oklch(0.12 0 0);
+  border-radius: 2px 6px 3px 5px / 5px 3px 6px 2px;
+  box-shadow: 3px 3px 0 oklch(0.12 0 0);
+  background: oklch(0.12 0 0);
+  color: oklch(0.98 0 0);
+  font-weight: 700;
+  transition: box-shadow 0.12s ease, transform 0.12s ease;
+}
+.sketch-btn:hover {
+  box-shadow: 5px 5px 0 oklch(0.12 0 0);
+  transform: translate(-1px, -1px);
+}
+.sketch-btn:active {
+  box-shadow: 1px 1px 0 oklch(0.12 0 0);
+  transform: translate(2px, 2px);
+}
+
+/* Sketch button outline variant */
+.sketch-btn-outline {
+  border: 2px solid oklch(0.12 0 0);
+  border-radius: 2px 6px 3px 5px / 5px 3px 6px 2px;
+  box-shadow: 3px 3px 0 oklch(0.12 0 0);
+  background: transparent;
+  color: oklch(0.12 0 0);
+  font-weight: 700;
+  transition: box-shadow 0.12s ease, transform 0.12s ease;
+}
+.sketch-btn-outline:hover {
+  background: oklch(0.94 0 0);
+  box-shadow: 5px 5px 0 oklch(0.12 0 0);
+  transform: translate(-1px, -1px);
+}
+
+/* Sketch input */
+.sketch-input {
+  border: 2px solid oklch(0.12 0 0) !important;
+  border-radius: 2px 5px 3px 4px / 4px 2px 5px 3px !important;
+  box-shadow: 2px 2px 0 oklch(0.12 0 0) !important;
+  background: oklch(0.98 0 0) !important;
+  color: oklch(0.12 0 0) !important;
+}
+.sketch-input:focus {
+  box-shadow: 3px 3px 0 oklch(0.12 0 0) !important;
+  outline: none !important;
+}
+.sketch-input::placeholder {
+  color: oklch(0.60 0 0) !important;
+}
+
+/* Sketch font utility */
+.font-sketch {
+  font-family: 'Caveat', cursive;
+}
+
+/* Sketch badge / tag */
+.sketch-tag {
+  border: 1.5px solid oklch(0.12 0 0);
+  border-radius: 2px 5px 3px 4px / 4px 2px 5px 3px;
+  background: oklch(0.94 0 0);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  color: oklch(0.12 0 0);
+}
+
+/* Paper texture background */
+.paper-bg {
+  background-color: oklch(0.98 0 0);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 27px,
+      oklch(0.88 0 0 / 0.5) 27px,
+      oklch(0.88 0 0 / 0.5) 28px
+    );
+}
+
+/* Dotted grid background */
+.dot-grid-bg {
+  background-color: oklch(0.98 0 0);
+  background-image: radial-gradient(circle, oklch(0.75 0 0 / 0.5) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Phone mockup */
+.phone-mockup {
+  border: 3px solid oklch(0.12 0 0);
+  border-radius: 28px 32px 30px 26px / 26px 30px 32px 28px;
+  box-shadow: 6px 6px 0 oklch(0.12 0 0);
+  background: oklch(0.97 0 0);
+  position: relative;
+  overflow: hidden;
+}
+.phone-mockup::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 60px; height: 20px;
+  background: oklch(0.12 0 0);
+  border-radius: 0 0 12px 12px;
+  z-index: 10;
+}
+
+/* Mascot placeholder */
+.mascot-placeholder {
+  border: 2.5px dashed oklch(0.50 0 0);
+  border-radius: 4px 10px 6px 8px / 8px 6px 10px 4px;
+  background: oklch(0.95 0 0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: oklch(0.55 0 0);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Underline sketch style */
+.sketch-underline {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-underline-offset: 4px;
+  text-decoration-color: oklch(0.50 0 0);
+}
+
+/* Divider */
+.sketch-divider {
+  border: none;
+  border-top: 2px solid oklch(0.12 0 0);
+  border-radius: 50%;
+  opacity: 0.15;
+}
+
+/* Fade-in animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up          { animation: fadeInUp 0.55s cubic-bezier(0.23,1,0.32,1) both; }
+.animate-fade-in-up-delay-1  { animation: fadeInUp 0.55s cubic-bezier(0.23,1,0.32,1) 0.10s both; }
+.animate-fade-in-up-delay-2  { animation: fadeInUp 0.55s cubic-bezier(0.23,1,0.32,1) 0.20s both; }
+.animate-fade-in-up-delay-3  { animation: fadeInUp 0.55s cubic-bezier(0.23,1,0.32,1) 0.30s both; }
+
+/* Float */
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-8px); }
+}
+.animate-float { animation: float 3.5s ease-in-out infinite; }
+
+/* Scribble underline keyframe (decorative) */
+@keyframes scribble {
+  0%   { stroke-dashoffset: 300; }
+  100% { stroke-dashoffset: 0; }
+}
