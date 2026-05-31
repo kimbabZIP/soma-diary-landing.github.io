@@ -2,10 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://somadiary.manus.space/</loc>
+    <loc>https://soma-diary-landinggithubio.vercel.app/</loc>
     <lastmod>2026-05-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://somadiary.manus.space/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://soma-diary-landinggithubio.vercel.app/" />
   </url>
 </urlset>

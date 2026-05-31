@@ -196,10 +196,10 @@ function SuccessSection({
   onReset: () => void;
 }) {
   const [copied, setCopied] = useState(false);
-  const shareText = `소마다이어리 얼리 어답터로 사전 등록했어요! 익명으로 감정을 나누는 새로운 공간 ✍️ https://somadiary.manus.space`;
+  const shareText = `소마다이어리 얼리 어답터로 사전 등록했어요! 익명으로 감정을 나누는 새로운 공간 ✍️ https://soma-diary-landinggithubio.vercel.app/`;
 
   const handleCopy = () => {
-    navigator.clipboard.writeText("https://somadiary.manus.space");
+    navigator.clipboard.writeText("https://soma-diary-landinggithubio.vercel.app/");
     setCopied(true);
     toast.success("링크가 복사되었습니다!");
     setTimeout(() => setCopied(false), 2000);
@@ -244,7 +244,7 @@ function SuccessSection({
             </p>
             <div className="flex gap-2">
               <div className="flex-1 sketch-border bg-gray-50 px-3 py-2.5 text-xs font-mono text-gray-700 truncate">
-                https://somadiary.manus.space
+                https://soma-diary-landinggithubio.vercel.app/
               </div>
               <button
                 onClick={handleCopy}
