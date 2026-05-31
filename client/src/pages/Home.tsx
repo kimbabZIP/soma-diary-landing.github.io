@@ -160,7 +160,7 @@ function HeroSection({ onRegistered }: { onRegistered: (email: string) => void }
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="sketch-input flex-1 h-14 md:h-12 px-4 text-base md:text-sm w-full"
+                className="sketch-input w-full sm:flex-1 h-14 md:h-12 px-4 text-base md:text-sm appearance-none box-border"
               />
               <button
                 type="submit"
