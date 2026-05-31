@@ -97,7 +97,7 @@ function HeroSection({ onRegistered }: { onRegistered: (email: string) => void }
       <div className="absolute bottom-20 right-8 opacity-10 pointer-events-none select-none text-6xl font-black text-black rotate-[7deg]">△</div>
 
       <div className="container relative">
-        <div className="py-24 flex flex-col gap-8 max-w-5xl">
+        <div className="py-15 flex flex-col gap-8 max-w-5xl">
           {/* Badge */}
           <div className="animate-fade-in-up">
             <span className="sketch-tag inline-flex items-center gap-1.5">
@@ -108,6 +108,7 @@ function HeroSection({ onRegistered }: { onRegistered: (email: string) => void }
 
           {/* Headline + Cat side by side */}
           <div className="animate-fade-in-up-delay-1 flex flex-row items-center gap-6">
+            <div className="flex flex-col items-center gap-6">
             <h1
               className="text-5xl md:text-6xl lg:text-7xl font-black text-black leading-[1.1] tracking-tight shrink-0"
               style={{ fontFamily: "'Caveat', cursive" }}
@@ -130,15 +131,7 @@ function HeroSection({ onRegistered }: { onRegistered: (email: string) => void }
               <br />
               꺼내보세요
             </h1>
-            <div className="flex-1 flex justify-center items-center ml-50">
-              <div className="animate-float">
-              <PhoneMockup imageSrc="/screen-main_78f8190e.png" imageAlt="메인 화면" />
-              </div>
-            </div>
-          </div>
-
-          {/* Sub copy */}
-          <div className="animate-fade-in-up-delay-1">
+            <div className="animate-fade-in-up-delay-1">
             <p className="text-base text-gray-600 leading-relaxed max-w-sm">
               친구에게도, 가족에게도 말하기 어려웠던 고민들.
               <br />
@@ -147,6 +140,17 @@ function HeroSection({ onRegistered }: { onRegistered: (email: string) => void }
               비슷한 마음을 가진 누군가로부터 위로를 받으세요.
             </p>
           </div>
+            </div>
+            
+            <div className="flex-1 flex justify-center items-center ml-50">
+              <div className="animate-float">
+              <PhoneMockup imageSrc="/screen-main_78f8190e.png" imageAlt="메인 화면" />
+              </div>
+            </div>
+          </div>
+
+          {/* Sub copy */}
+          
 
           {/* Email Form */}
           <div className="animate-fade-in-up-delay-2">
