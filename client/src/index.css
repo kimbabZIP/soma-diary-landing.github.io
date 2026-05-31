@@ -205,16 +205,6 @@ html { scroll-behavior: smooth; }
   position: relative;
   overflow: hidden;
 }
-.phone-mockup::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 60px; height: 20px;
-  background: oklch(0.12 0 0);
-  border-radius: 0 0 12px 12px;
-  z-index: 10;
-}
 
 /* Mascot placeholder */
 .mascot-placeholder {

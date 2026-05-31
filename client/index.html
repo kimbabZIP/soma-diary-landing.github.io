@@ -2,9 +2,79 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5" />
+
+    <!-- ── Primary SEO ─────────────────────────────────────────────── -->
     <title>소마다이어리 — 익명 일기 공유 서비스 사전 등록</title>
-    <meta name="description" content="나의 이야기를 익명으로 공유하고, 비슷한 마음을 가진 누군가로부터 위로를 받는 공간. 소마다이어리 얼리 어답터로 등록하세요." />
+    <meta name="description" content="말 못했던 이야기를 익명으로 꺼내보세요. 소마다이어리는 익명으로 일기를 쓰고, 비슷한 감정의 누군가와 연결되는 감성 일기 공유 서비스입니다. 지금 얼리 어답터로 사전 등록하세요." />
+    <meta name="keywords" content="소마다이어리, 익명 일기, 감정 공유, 일기 앱, 익명 SNS, 감성 다이어리, 얼리 어답터, 사전 등록, IDLE, somadiary" />
+    <meta name="author" content="팀 IDLE" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://somadiary.manus.space/" />
+
+    <!-- ── Open Graph (Facebook / KakaoTalk / 링크 미리보기) ──────── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="소마다이어리" />
+    <meta property="og:title" content="소마다이어리 — 말 못했던 이야기를 익명으로 꺼내보세요" />
+    <meta property="og:description" content="익명으로 일기를 쓰고, 비슷한 감정의 누군가로부터 위로를 받는 공간. 지금 얼리 어답터로 사전 등록하고 특별한 혜택을 받으세요." />
+    <meta property="og:url" content="https://somadiary.manus.space/" />
+    <meta property="og:locale" content="ko_KR" />
+
+    <!-- ── Twitter Card ────────────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@somadiary" />
+    <meta name="twitter:title" content="소마다이어리 — 말 못했던 이야기를 익명으로 꺼내보세요" />
+    <meta name="twitter:description" content="익명으로 일기를 쓰고, 비슷한 감정의 누군가로부터 위로를 받는 공간. 지금 얼리 어답터로 사전 등록하세요." />
+
+    <!-- ── Theme / PWA ──────────────────────────────────────────────── -->
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="color-scheme" content="light" />
+    <meta name="application-name" content="소마다이어리" />
+
+    <!-- ── Structured Data (JSON-LD) ───────────────────────────────── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "소마다이어리",
+      "alternateName": "SomaDiary",
+      "url": "https://somadiary.manus.space/",
+      "description": "말 못했던 이야기를 익명으로 꺼내보세요. 익명 일기 공유 서비스 소마다이어리.",
+      "inLanguage": "ko-KR",
+      "publisher": {
+        "@type": "Organization",
+        "name": "팀 IDLE",
+        "email": "hello@somadiary.com"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://somadiary.manus.space/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "소마다이어리",
+      "operatingSystem": "iOS, Android",
+      "applicationCategory": "LifestyleApplication",
+      "description": "익명으로 일기를 쓰고, 비슷한 감정의 누군가와 연결되는 감성 일기 공유 서비스.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "팀 IDLE",
+        "email": "hello@somadiary.com"
+      }
+    }
+    </script>
+
+    <!-- ── Fonts ───────────────────────────────────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -12,9 +82,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
   </body>
 </html>

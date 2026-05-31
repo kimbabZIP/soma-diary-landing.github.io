@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import {
   ShieldCheck,
@@ -7,7 +6,6 @@ import {
   Sparkles,
   BookOpen,
   Send,
-  Lock,
   MessageCircleHeart,
   Copy,
   Check,
@@ -16,10 +14,12 @@ import {
   Github,
   ArrowRight,
   Feather,
-  Cat,
-  Smartphone,
-  Users,
 } from "lucide-react";
+
+// ── Google Form URL ───────────────────────────────────────────────────────────
+const GOOGLE_FORM_BASE =
+  "https://docs.google.com/forms/d/e/1FAIpQLScla7Lqeh_ULXdNmHfBLy_BhiKXyID19096K-j4ei54N-5f-w/formResponse";
+const EMAIL_FIELD = "entry.1346893337";
 
 // ── Navbar ───────────────────────────────────────────────────────────────────
 function Navbar() {
@@ -48,10 +48,7 @@ function Navbar() {
             소마다이어리
           </span>
         </div>
-        <a
-          href="#register"
-          className="sketch-btn-outline text-sm px-4 py-1.5 inline-block"
-        >
+        <a href="#register" className="sketch-btn-outline text-sm px-4 py-1.5 inline-block">
           사전 등록 →
         </a>
       </div>
@@ -60,182 +57,130 @@ function Navbar() {
 }
 
 // ── Hero Section ─────────────────────────────────────────────────────────────
-function HeroSection({
-  onRegistered,
-}: {
-  onRegistered: (data: {
-    email: string;
-    referralCode: string;
-    rank: number;
-    totalCount: number;
-  }) => void;
-}) {
+function HeroSection({ onRegistered }: { onRegistered: (email: string) => void }) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { data: countData } = trpc.waitlist.count.useQuery(undefined, {
-    refetchInterval: 30000,
-  });
 
-  const registerMutation = trpc.waitlist.register.useMutation({
-    onSuccess: (data) => {
-      onRegistered({ email, ...data });
-      setEmail("");
-    },
-    onError: (err) => {
-      toast.error(err.message || "등록 중 오류가 발생했습니다.");
-    },
-    onSettled: () => setIsSubmitting(false),
-  });
-
-  const refCode = new URLSearchParams(window.location.search).get("ref") ?? undefined;
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
-    setIsSubmitting(true);
-    registerMutation.mutate({
-      email: email.trim(),
-      referredBy: refCode,
-      origin: window.location.origin,
-    });
-  };
+    const trimmed = email.trim();
+    if (!trimmed) return;
 
-  const count = countData?.count ?? 0;
+    setIsSubmitting(true);
+
+    try {
+      // 구글 폼에 no-cors 모드로 제출 (응답 본문은 읽을 수 없지만 전송은 됨)
+      await fetch(GOOGLE_FORM_BASE, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ [EMAIL_FIELD]: trimmed }).toString(),
+      });
+    } catch {
+      // no-cors 특성상 에러가 발생해도 실제로는 전송된 경우가 많으므로 무시
+    } finally {
+      setIsSubmitting(false);
+      onRegistered(trimmed);
+      setEmail("");
+    }
+  };
 
   return (
     <section
       id="register"
       className="relative min-h-screen flex items-center dot-grid-bg pt-16 overflow-hidden"
     >
-      {/* Decorative corner scribbles */}
+      {/* Decorative scribbles */}
       <div className="absolute top-24 left-8 opacity-10 pointer-events-none select-none text-7xl font-black text-black rotate-[-8deg]">✦</div>
       <div className="absolute top-32 right-12 opacity-10 pointer-events-none select-none text-5xl font-black text-black rotate-[12deg]">◇</div>
       <div className="absolute bottom-24 left-16 opacity-10 pointer-events-none select-none text-4xl font-black text-black rotate-[-5deg]">○</div>
       <div className="absolute bottom-20 right-8 opacity-10 pointer-events-none select-none text-6xl font-black text-black rotate-[7deg]">△</div>
 
       <div className="container relative">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-20">
-          {/* Left: Text + Form */}
-          <div className="flex flex-col gap-7">
-            {/* Badge */}
-            <div className="animate-fade-in-up">
-              <span className="sketch-tag inline-flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                얼리 어답터 모집 중
-                {count > 0 && (
-                  <span className="ml-1 font-black">{count.toLocaleString()}명 등록</span>
-                )}
+        <div className="py-24 flex flex-col gap-8 max-w-5xl">
+          {/* Badge */}
+          <div className="animate-fade-in-up">
+            <span className="sketch-tag inline-flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5" />
+              얼리 어답터 모집 중
+            </span>
+          </div>
+
+          {/* Headline + Cat side by side */}
+          <div className="animate-fade-in-up-delay-1 flex flex-row items-center gap-6">
+            <h1
+              className="text-5xl md:text-6xl lg:text-7xl font-black text-black leading-[1.1] tracking-tight shrink-0"
+              style={{ fontFamily: "'Caveat', cursive" }}
+            >
+              말 못했던
+              <br />
+              이야기를
+              <br />
+              <span
+                className="relative inline-block"
+                style={{
+                  textDecoration: "underline",
+                  textDecorationStyle: "wavy",
+                  textUnderlineOffset: "6px",
+                  textDecorationColor: "oklch(0.50 0 0)",
+                }}
+              >
+                익명으로
               </span>
-            </div>
-
-            {/* Headline */}
-            <div className="animate-fade-in-up-delay-1 flex flex-col gap-3">
-          <h1
-            className="text-5xl md:text-6xl font-black text-black leading-[1.1] tracking-tight"
-            style={{ fontFamily: "'Caveat', cursive" }}
-          >
-                말 못했던
-                <br />
-                이야기를
-                <br />
-                <span
-                  className="relative inline-block"
-                  style={{
-                    textDecoration: "underline",
-                    textDecorationStyle: "wavy",
-                    textUnderlineOffset: "6px",
-                    textDecorationColor: "oklch(0.50 0 0)",
-                  }}
-                >
-                  익명으로
-                </span>
-                <br />
-                꺼내보세요
-              </h1>
-              <p className="text-base text-gray-600 leading-relaxed max-w-sm">
-                친구에게도, 가족에게도 말하기 어려웠던 고민들.
-                <br />
-                소마다이어리에서 익명으로 공유하고,
-                <br />
-                비슷한 마음을 가진 누군가로부터 위로를 받으세요.
-              </p>
-            </div>
-
-            {/* Email Form */}
-            <div className="animate-fade-in-up-delay-2">
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md">
-                <input
-                  type="email"
-                  placeholder="이메일 주소를 입력하세요"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="sketch-input flex-1 h-12 px-4 text-sm"
-                />
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="sketch-btn h-12 px-6 text-sm whitespace-nowrap flex items-center gap-2 justify-center"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                      등록 중...
-                    </>
-                  ) : (
-                    <>
-                      사전 등록하기
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </form>
-              <p className="mt-2.5 text-xs text-gray-500">
-                스팸 없음 · 언제든 구독 취소 가능 · 출시 소식을 가장 먼저 받아보세요
-              </p>
-            </div>
-
-            {/* Social proof */}
-            {count > 0 && (
-              <div className="animate-fade-in-up-delay-3 flex items-center gap-3">
-                <div className="flex -space-x-2">
-                  {[0, 1, 2, 3, 4].map((i) => (
-                    <div
-                      key={i}
-                      className="w-8 h-8 rounded-full bg-gray-200 border-2 border-black flex items-center justify-center text-xs font-black"
-                    >
-                      {["A", "B", "C", "D", "E"][i]}
-                    </div>
-                  ))}
-                </div>
-                <p className="text-sm text-gray-600">
-                  <strong className="text-black font-black">{count.toLocaleString()}명</strong>이 이미 대기 중
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Right: Mascot placeholder */}
-          <div className="animate-fade-in-up-delay-2 flex justify-center lg:justify-end">
-            <div className="mascot-placeholder w-72 h-80 lg:w-80 lg:h-96 animate-float">
-              <Cat className="w-16 h-16 text-gray-400 stroke-[1.5]" />
-              <div className="text-center px-6">
-                <p className="font-bold text-gray-500 text-sm">마스코트 고양이</p>
-                <p className="text-gray-400 text-xs mt-1">이미지를 업로드해 주세요</p>
-              </div>
-              {/* Decorative sketch lines */}
-              <div className="absolute bottom-4 right-4 opacity-30 text-xs font-mono text-gray-400">
-                [ 스프라이트 ]
+              <br />
+              꺼내보세요
+            </h1>
+            <div className="flex-1 flex justify-center items-center ml-50">
+              <div className="animate-float">
+              <PhoneMockup imageSrc="/screen-main_78f8190e.png" imageAlt="메인 화면" />
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-gray-400 animate-bounce">
-        <div className="w-5 h-8 sketch-border-sm flex items-start justify-center pt-1.5">
-          <div className="w-1 h-2 rounded-full bg-gray-400" />
+          {/* Sub copy */}
+          <div className="animate-fade-in-up-delay-1">
+            <p className="text-base text-gray-600 leading-relaxed max-w-sm">
+              친구에게도, 가족에게도 말하기 어려웠던 고민들.
+              <br />
+              소마다이어리에서 익명으로 공유하고,
+              <br />
+              비슷한 마음을 가진 누군가로부터 위로를 받으세요.
+            </p>
+          </div>
+
+          {/* Email Form */}
+          <div className="animate-fade-in-up-delay-2">
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md">
+              <input
+                type="email"
+                placeholder="이메일 주소를 입력하세요"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="sketch-input flex-1 h-12 px-4 text-sm"
+              />
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="sketch-btn h-12 px-6 text-sm whitespace-nowrap flex items-center gap-2 justify-center"
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                    등록 중...
+                  </>
+                ) : (
+                  <>
+                    사전 등록하기
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </form>
+            <p className="mt-2.5 text-xs text-gray-500">
+              스팸 없음 · 언제든 구독 취소 가능 · 출시 소식을 가장 먼저 받아보세요
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -244,19 +189,19 @@ function HeroSection({
 
 // ── Registration Success ──────────────────────────────────────────────────────
 function SuccessSection({
-  data,
+  email,
   onReset,
 }: {
-  data: { email: string; referralCode: string; rank: number; totalCount: number };
+  email: string;
   onReset: () => void;
 }) {
   const [copied, setCopied] = useState(false);
-  const referralUrl = `${window.location.origin}?ref=${data.referralCode}`;
+  const shareText = `소마다이어리 얼리 어답터로 사전 등록했어요! 익명으로 감정을 나누는 새로운 공간 ✍️ https://somadiary.manus.space`;
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(referralUrl);
+    navigator.clipboard.writeText("https://somadiary.manus.space");
     setCopied(true);
-    toast.success("추천 링크가 복사되었습니다!");
+    toast.success("링크가 복사되었습니다!");
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -275,32 +220,31 @@ function SuccessSection({
           </div>
 
           <div className="animate-fade-in-up-delay-1">
-          <h2
-            className="text-4xl font-black text-black tracking-tight mb-3"
-            style={{ fontFamily: "'Caveat', cursive" }}
-          >
-            등록 완료! 🎉
-          </h2>
+            <h2
+              className="text-4xl font-black text-black tracking-tight mb-3"
+              style={{ fontFamily: "'Caveat', cursive" }}
+            >
+              등록 완료! 🎉
+            </h2>
             <p className="text-gray-600 leading-relaxed">
-              <strong className="text-black">{data.email}</strong>으로 등록되었습니다.
+              <strong className="text-black">{email}</strong>으로 사전 등록이 완료되었습니다.
               <br />
-              현재 대기 순번은{" "}
-              <strong className="text-black font-black text-xl">#{data.rank}</strong>입니다.
+              출시 소식을 가장 먼저 알려드릴게요.
             </p>
           </div>
 
-          {/* Referral card */}
+          {/* Share card */}
           <div className="animate-fade-in-up-delay-2 sketch-card p-6">
             <div className="flex items-center gap-2 mb-3">
-              <Users className="w-5 h-5" />
-              <h3 className="font-black text-black">친구를 초대하면 순번이 올라가요</h3>
+              <Heart className="w-5 h-5" />
+              <h3 className="font-black text-black">친구에게도 알려주세요</h3>
             </div>
             <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-              나만의 추천 링크를 공유하면 친구가 등록할 때마다 대기 순번이 앞당겨집니다.
+              소마다이어리를 친구와 함께 시작해보세요.
             </p>
             <div className="flex gap-2">
               <div className="flex-1 sketch-border bg-gray-50 px-3 py-2.5 text-xs font-mono text-gray-700 truncate">
-                {referralUrl}
+                https://somadiary.manus.space
               </div>
               <button
                 onClick={handleCopy}
@@ -309,17 +253,12 @@ function SuccessSection({
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
-            <p className="mt-2.5 text-xs text-gray-500">
-              환영 이메일에도 추천 링크가 포함되어 있습니다.
-            </p>
           </div>
 
           {/* Share buttons */}
           <div className="animate-fade-in-up-delay-3 flex flex-wrap gap-3">
             <a
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                `소마다이어리 얼리 어답터로 등록했어요! 익명으로 감정을 나누는 새로운 공간 ✍️ ${referralUrl}`
-              )}`}
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="sketch-btn-outline flex items-center gap-2 px-4 py-2.5 text-sm"
@@ -382,7 +321,6 @@ function BenefitsSection() {
   return (
     <section id="benefits" className="py-24 bg-white border-t-2 border-black">
       <div className="container">
-        {/* Section header */}
         <div className="mb-14">
           <span className="sketch-tag inline-flex items-center gap-1.5 mb-4">
             ✦ 지금 가입해야 하는 이유
@@ -400,7 +338,6 @@ function BenefitsSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {benefits.map((b, i) => (
             <div key={i} className="sketch-card p-8 flex flex-col gap-5">
-              {/* Number + icon row */}
               <div className="flex items-start justify-between">
                 <div className="w-14 h-14 sketch-border flex items-center justify-center bg-black text-white">
                   {b.icon}
@@ -427,7 +364,7 @@ function BenefitsSection() {
   );
 }
 
-// ── Features Section (Phone mockup layout) ────────────────────────────────────
+// ── Features Section ──────────────────────────────────────────────────────────
 const features = [
   {
     icon: <BookOpen className="w-5 h-5 stroke-[1.5]" />,
@@ -435,8 +372,9 @@ const features = [
     tag: "홈 & 고양이 대화",
     description:
       "앱을 열면 고양이 마스코트가 오늘 하루를 물어봐요. 일기 쓰기, 상자(받은 일기), 상점에 바로 접근할 수 있어요.",
-    detail: "고양이와 대화하기 버튼으로 AI 대화 모드를 시작하거나, 일기 쓰기 버튼으로 바로 작성 화면으로 이동할 수 있습니다.",
-    imageSrc: "/manus-storage/screen-main_78f8190e.png",
+    detail:
+      "고양이와 대화하기 버튼으로 AI 대화 모드를 시작하거나, 일기 쓰기 버튼으로 바로 작성 화면으로 이동할 수 있습니다.",
+    imageSrc: "/screen-main_78f8190e.png",
     imageAlt: "메인 화면",
   },
   {
@@ -445,8 +383,9 @@ const features = [
     tag: "혼자 쓰기 모드",
     description:
       "조용히 혼자만의 공간에서 일기를 씁니다. 작성이 끝나면 익명으로 바다에 띄워 보낼 수 있어요.",
-    detail: "하단의 '내 일기를 익명으로 바다에 띄워 보내기' 옵션을 체크하면 비슷한 감정의 누군가에게 전달됩니다.",
-    imageSrc: "/manus-storage/screen-solo_9268035d.png",
+    detail:
+      "하단의 '내 일기를 익명으로 바다에 띄워 보내기' 옵션을 체크하면 비슷한 감정의 누군가에게 전달됩니다.",
+    imageSrc: "/screen-solo_9268035d.png",
     imageAlt: "혼자 쓰기 화면",
   },
   {
@@ -455,8 +394,9 @@ const features = [
     tag: "AI 고양이와 대화",
     description:
       "고양이 마스코트가 먼저 말을 건네며 오늘 하루를 이끌어냅니다. 대화하듯 자연스럽게 일기를 완성해요.",
-    detail: "AI가 감정을 파악하며 적절한 질문을 이어갑니다. 대화가 끝나면 자동으로 일기 형태로 정리되어 저장됩니다.",
-    imageSrc: "/manus-storage/screen-together_3c1400f7.png",
+    detail:
+      "AI가 감정을 파악하며 적절한 질문을 이어갑니다. 대화가 끝나면 자동으로 일기 형태로 정리되어 저장됩니다.",
+    imageSrc: "/screen-together_3c1400f7.png",
     imageAlt: "함께 쓰기 화면",
   },
   {
@@ -465,8 +405,9 @@ const features = [
     tag: "익명 답장 받기",
     description:
       "누군가 바다에 띄워 보낸 일기가 상자에 도착합니다. 읽고 위로의 한 마디를 남길 수 있어요.",
-    detail: "답장은 1회만 가능하며 이후 대화로 이어지지 않습니다. 발신자는 완전히 익명으로 보호됩니다.",
-    imageSrc: "/manus-storage/screen-reply_566ee307.jpg",
+    detail:
+      "답장은 1회만 가능하며 이후 대화로 이어지지 않습니다. 발신자는 완전히 익명으로 보호됩니다.",
+    imageSrc: "/screen-reply_566ee307.jpg",
     imageAlt: "받은 일기 화면",
   },
 ];
@@ -474,13 +415,12 @@ const features = [
 function PhoneMockup({ imageSrc, imageAlt }: { imageSrc: string; imageAlt: string }) {
   return (
     <div className="phone-mockup w-52 h-[420px] mx-auto flex flex-col overflow-hidden">
-      {/* Notch via ::before in CSS */}
-      <div className="pt-6 flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <img
           src={imageSrc}
           alt={imageAlt}
           className="w-full flex-1 object-cover object-top"
-          style={{ display: 'block' }}
+          style={{ display: "block" }}
         />
       </div>
     </div>
@@ -491,7 +431,6 @@ function FeaturesSection() {
   return (
     <section id="features" className="py-24 paper-bg border-t-2 border-black">
       <div className="container">
-        {/* Section header */}
         <div className="mb-16">
           <span className="sketch-tag inline-flex items-center gap-1.5 mb-4">
             <Feather className="w-3.5 h-3.5" />
@@ -510,17 +449,11 @@ function FeaturesSection() {
           </p>
         </div>
 
-        {/* Feature rows — phone always first col (left), description second col (right) on even;
-             phone second col (right), description first col (left) on odd */}
         <div className="flex flex-col gap-20">
           {features.map((f, i) => {
             const phoneLeft = i % 2 === 0;
             return (
-              <div
-                key={i}
-                className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center"
-              >
-                {/* Phone mockup — left on even, right on odd */}
+              <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                 {phoneLeft ? (
                   <>
                     <div className="flex justify-center">
@@ -533,7 +466,10 @@ function FeaturesSection() {
                         </div>
                         <span className="sketch-tag">{f.tag}</span>
                       </div>
-                      <h3 className="text-2xl font-black text-black" style={{ fontFamily: "'Caveat', cursive" }}>
+                      <h3
+                        className="text-2xl font-black text-black"
+                        style={{ fontFamily: "'Caveat', cursive" }}
+                      >
                         {f.title}
                       </h3>
                       <p className="text-gray-700 leading-relaxed">{f.description}</p>
@@ -544,14 +480,17 @@ function FeaturesSection() {
                   </>
                 ) : (
                   <>
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-5 order-2 md:order-1">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 sketch-border flex items-center justify-center bg-black text-white">
                           {f.icon}
                         </div>
                         <span className="sketch-tag">{f.tag}</span>
                       </div>
-                      <h3 className="text-2xl font-black text-black" style={{ fontFamily: "'Caveat', cursive" }}>
+                      <h3
+                        className="text-2xl font-black text-black"
+                        style={{ fontFamily: "'Caveat', cursive" }}
+                      >
                         {f.title}
                       </h3>
                       <p className="text-gray-700 leading-relaxed">{f.description}</p>
@@ -559,7 +498,7 @@ function FeaturesSection() {
                         {f.detail}
                       </p>
                     </div>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center order-1 md:order-2">
                       <PhoneMockup imageSrc={f.imageSrc} imageAlt={f.imageAlt} />
                     </div>
                   </>
@@ -641,9 +580,21 @@ function Footer() {
             <div>
               <h4 className="font-black text-black mb-3">서비스</h4>
               <ul className="flex flex-col gap-2 text-gray-600">
-                <li><a href="#benefits" className="hover:text-black transition-colors">혜택 안내</a></li>
-                <li><a href="#features" className="hover:text-black transition-colors">핵심 기능</a></li>
-                <li><a href="#register" className="hover:text-black transition-colors">사전 등록</a></li>
+                <li>
+                  <a href="#benefits" className="hover:text-black transition-colors">
+                    혜택 안내
+                  </a>
+                </li>
+                <li>
+                  <a href="#features" className="hover:text-black transition-colors">
+                    핵심 기능
+                  </a>
+                </li>
+                <li>
+                  <a href="#register" className="hover:text-black transition-colors">
+                    사전 등록
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
@@ -651,8 +602,11 @@ function Footer() {
               <ul className="flex flex-col gap-2 text-gray-600">
                 <li>권기혁 · 박윤수 · 정우찬</li>
                 <li>
-                  <a href="mailto:hello@somadiary.com" className="hover:text-black transition-colors">
-                    hello@somadiary.com
+                  <a
+                    href="mailto:idle.soma@gmail.com"
+                    className="hover:text-black transition-colors"
+                  >
+                    idle.soma@gmail.com
                   </a>
                 </li>
               </ul>
@@ -664,9 +618,16 @@ function Footer() {
             <h4 className="font-black text-black text-sm">소셜 미디어</h4>
             <div className="flex gap-3">
               {[
-                { href: "https://twitter.com/", icon: <Twitter className="w-4 h-4" />, label: "X" },
-                { href: "https://instagram.com/", icon: <Instagram className="w-4 h-4" />, label: "Instagram" },
-                { href: "https://github.com/", icon: <Github className="w-4 h-4" />, label: "GitHub" },
+                {
+                  href: "https://x.com/soma_diary_serv",
+                  icon: <Twitter className="w-4 h-4" />,
+                  label: "X",
+                },
+                {
+                  href: "https://www.instagram.com/soma_diary_serv/",
+                  icon: <Instagram className="w-4 h-4" />,
+                  label: "Instagram",
+                },
               ].map((s) => (
                 <a
                   key={s.label}
@@ -694,20 +655,10 @@ function Footer() {
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function Home() {
-  const [registeredData, setRegisteredData] = useState<{
-    email: string;
-    referralCode: string;
-    rank: number;
-    totalCount: number;
-  } | null>(null);
+  const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
 
-  const handleRegistered = (data: {
-    email: string;
-    referralCode: string;
-    rank: number;
-    totalCount: number;
-  }) => {
-    setRegisteredData(data);
+  const handleRegistered = (email: string) => {
+    setRegisteredEmail(email);
     toast.success("사전 등록이 완료되었습니다! 🎉");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -720,8 +671,8 @@ export default function Home() {
     <div className="min-h-screen" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>
       <Navbar />
 
-      {registeredData ? (
-        <SuccessSection data={registeredData} onReset={() => setRegisteredData(null)} />
+      {registeredEmail ? (
+        <SuccessSection email={registeredEmail} onReset={() => setRegisteredEmail(null)} />
       ) : (
         <HeroSection onRegistered={handleRegistered} />
       )}
