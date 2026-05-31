@@ -38,17 +38,17 @@ function Navbar() {
     >
       <div className="container flex items-center justify-between h-16">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 sketch-border flex items-center justify-center bg-black">
+          <div className="w-8 h-8 sketch-border flex items-center justify-center bg-black shrink-0">
             <Feather className="w-4 h-4 text-white" />
           </div>
           <span
-            className="font-black text-lg text-black tracking-tight"
+            className="font-black text-base md:text-lg text-black tracking-tight"
             style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
           >
             소마다이어리
           </span>
         </div>
-        <a href="#register" className="sketch-btn-outline text-sm px-4 py-1.5 inline-block">
+        <a href="#register" className="sketch-btn-outline text-xs md:text-sm px-3 md:px-4 py-1.5 inline-block whitespace-nowrap">
           사전 등록 →
         </a>
       </div>
@@ -98,17 +98,16 @@ function HeroSection({ onRegistered }: { onRegistered: (email: string) => void }
 
       <div className="container relative">
         <div className="py-15 flex flex-col gap-8 max-w-5xl">
-          {/* Badge */}
           <div className="animate-fade-in-up">
             <span className="sketch-tag inline-flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
-              얼리 어답터 모집 중
+              얼리 어답터 모집 중 (선착순 100명)
             </span>
           </div>
 
           {/* Headline + Cat side by side */}
-          <div className="animate-fade-in-up-delay-1 flex flex-row items-center gap-6">
-            <div className="flex flex-col items-center gap-6">
+          <div className="animate-fade-in-up-delay-1 flex flex-col md:flex-row items-center md:items-start justify-between gap-12 md:gap-6 w-full">
+            <div className="flex flex-col items-center md:items-start gap-6 text-center md:text-left">
             <h1
               className="text-5xl md:text-6xl lg:text-7xl font-black text-black leading-[1.1] tracking-tight shrink-0"
               style={{ fontFamily: "'Caveat', cursive" }}
@@ -134,15 +133,15 @@ function HeroSection({ onRegistered }: { onRegistered: (email: string) => void }
             <div className="animate-fade-in-up-delay-1">
             <p className="text-base text-gray-600 leading-relaxed max-w-sm">
               친구에게도, 가족에게도 말하기 어려웠던 고민들.
-              <br />
+              <br className="hidden md:block" />
               소마다이어리에서 익명으로 공유하고,
-              <br />
+              <br className="hidden md:block" />
               비슷한 마음을 가진 누군가로부터 위로를 받으세요.
             </p>
           </div>
             </div>
             
-            <div className="flex-1 flex justify-center items-center ml-50">
+            <div className="flex-1 flex justify-center items-center w-full md:w-auto mt-4 md:mt-0 md:ml-12">
               <div className="animate-float">
               <PhoneMockup imageSrc="/screen-main_78f8190e.png" imageAlt="메인 화면" />
               </div>
@@ -153,20 +152,20 @@ function HeroSection({ onRegistered }: { onRegistered: (email: string) => void }
           
 
           {/* Email Form */}
-          <div className="animate-fade-in-up-delay-2">
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md">
+          <div className="animate-fade-in-up-delay-2 w-full flex flex-col items-center md:items-start mt-4 md:mt-0">
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
               <input
                 type="email"
                 placeholder="이메일 주소를 입력하세요"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="sketch-input flex-1 h-12 px-4 text-sm"
+                className="sketch-input flex-1 h-12 px-4 text-sm w-full"
               />
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="sketch-btn h-12 px-6 text-sm whitespace-nowrap flex items-center gap-2 justify-center"
+                className="sketch-btn h-12 px-6 text-sm whitespace-nowrap flex items-center gap-2 justify-center w-full sm:w-auto"
               >
                 {isSubmitting ? (
                   <>
@@ -181,7 +180,7 @@ function HeroSection({ onRegistered }: { onRegistered: (email: string) => void }
                 )}
               </button>
             </form>
-            <p className="mt-2.5 text-xs text-gray-500">
+            <p className="mt-2.5 text-xs text-gray-500 text-center md:text-left">
               스팸 없음 · 언제든 구독 취소 가능 · 출시 소식을 가장 먼저 받아보세요
             </p>
           </div>
@@ -317,8 +316,8 @@ function BenefitsSection() {
       number: "03",
       title: "얼리 어답터 혜택",
       description:
-        "출시 후 프리미엄 기능 무료 이용, 대기 순번 우선권, 서비스 방향에 직접 의견을 낼 수 있는 기회를 드립니다.",
-      tag: "프리미엄 무료 제공",
+        "한정판 아이템 증정 및 출시 후 선물 꾸러미를 배송해드립니다.",
+      tag: "선물 증정",
     },
   ];
 
@@ -536,7 +535,7 @@ function CTASection({ onScrollToRegister }: { onScrollToRegister: () => void }) 
           <p className="text-gray-400 leading-relaxed">
             소마다이어리가 출시되면 가장 먼저 알려드릴게요.
             <br />
-            지금 등록하고 얼리 어답터 혜택을 받으세요.
+            지금 등록하고 선착순 100명에게 주어지는 얼리 어답터 혜택을 받으세요.
           </p>
           <button
             onClick={onScrollToRegister}
