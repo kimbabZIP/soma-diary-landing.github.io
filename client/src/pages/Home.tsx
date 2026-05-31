@@ -49,7 +49,7 @@ function Navbar() {
           </span>
         </div>
         <a href="#register" className="sketch-btn-outline text-xs md:text-sm px-3 md:px-4 py-1.5 inline-block whitespace-nowrap">
-          사전 등록 →
+          사전 등록 및 클로즈 베타 신청 →
         </a>
       </div>
     </nav>
@@ -316,8 +316,8 @@ function BenefitsSection() {
       number: "03",
       title: "얼리 어답터 혜택",
       description:
-        "한정판 아이템 증정 및 출시 후 선물 꾸러미를 배송해드립니다.",
-      tag: "선물 증정",
+        "선착순 100명 안에 들면 클로즈 베타 참여권이 주어지며, 한정판 아이템 증정 및 출시 후 선물 꾸러미를 배송해드립니다.",
+      tag: "클로즈 베타 & 선물 증정",
     },
   ];
 
@@ -535,7 +535,7 @@ function CTASection({ onScrollToRegister }: { onScrollToRegister: () => void }) 
           <p className="text-gray-400 leading-relaxed">
             소마다이어리가 출시되면 가장 먼저 알려드릴게요.
             <br />
-            지금 등록하고 선착순 100명에게 주어지는 얼리 어답터 혜택을 받으세요.
+            지금 등록하고 선착순 100명에게 주어지는 클로즈 베타 참여권 등 얼리 어답터 혜택을 받으세요.
           </p>
           <button
             onClick={onScrollToRegister}
